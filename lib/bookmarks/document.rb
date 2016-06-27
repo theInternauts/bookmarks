@@ -25,13 +25,13 @@ module Bookmarks
     end
 
     # Public: Returns the Symbol format of the document. Currently
-    #   there is only one format available: `:netscape`.
+    #   there are only two formats available: `:netscape` and `:delicious`.
     attr_reader :bookmarks_format
 
     # Public: Returns the String document.
     attr_reader :document
 
-    # Public: Returns an Array of NetscapeBookmark bookmarks.
+    # Public: Returns an Array of instances of the specified bookmark class.
     attr_reader :bookmarks
 
     # Public: Returns the Integer numbers of bookmarks in the document.
@@ -85,10 +85,18 @@ module Bookmarks
       elsif line =~ /^<\/DL>/
         @h3_tags.pop
       elsif line =~ /<DT><A HREF="http/
-        @bookmarks << NetscapeBookmark.from_string(line)
-        if (not @h3_tags.empty?) && (not @bookmarks.last.nil?)
-          @bookmarks.last.add_tags @h3_tags
+        new_bookmark = case @bookmarks_format
+          when :delicious
+            DeliciousBookmark.from_string(line)  
+          else          
+            NetscapeBookmark.from_string(line)  
+          end
+        unless new_bookmark.nil?
+          unless @h3_tags.empty?
+            new_bookmark.add_tags @h3_tags
+          end
         end
+        @bookmarks << new_bookmark
       elsif line =~ /^<DD>/
         @bookmarks.last.description = line[4..-1].chomp
       end

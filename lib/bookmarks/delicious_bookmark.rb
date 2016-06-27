@@ -59,7 +59,7 @@ module Bookmarks
     def to_s
       str = "<DT><A HREF=\"#{@url}\" " +
         "ADD_DATE=\"#{@date.nil? ? "" : @date.to_time.to_i}\" " +
-        "PRIVATE=\"#{@private_flag.nil? ? "" : @private_flag}\" " +
+        "PRIVATE=\"#{@private_flag}\" " +
         "TAGS=\"#{@tags}\">" +
         (@title.empty? ? 'None' : @title) + "</A>"
       if @description.empty?
