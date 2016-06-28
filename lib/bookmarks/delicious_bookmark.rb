@@ -52,7 +52,6 @@ module Bookmarks
     # Public: Set/get the Boolean Integer.
     attr_accessor :private_flag
 
-
     # Public: Returns the bookmark as a String.
     def to_s
       str = "<DT><A HREF=\"#{@url}\" " +
