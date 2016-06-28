@@ -4,3 +4,4 @@ coverage/
 *.swp
 doc/
 .yardoc/
+.DS_Store
