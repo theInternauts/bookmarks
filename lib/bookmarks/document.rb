@@ -2,7 +2,6 @@
 # -*- encoding: utf-8 -*-
 
 module Bookmarks
-
   # Public: Document is your main interface to the file of bookmarks
   # (called «document»).
   class Document
@@ -80,11 +79,11 @@ module Bookmarks
     # TODO This should have its own parser class.
     def parse_a_bookmark line
       line = line.strip
-      if line =~ /^<DT><H3/
+      if line =~ %r{^<DT><H3}
         @h3_tags << h3_tags(line)
-      elsif line =~ /^<\/DL>/
+      elsif line =~ %r{^</DL>}
         @h3_tags.pop
-      elsif line =~ /<DT><A HREF="http/
+      elsif line =~ %r{<DT><A HREF="http}
         new_bookmark = case @bookmarks_format
                        when :delicious
                          DeliciousBookmark.from_string(line)
@@ -97,7 +96,7 @@ module Bookmarks
           end
         end
         @bookmarks << new_bookmark
-      elsif line =~ /^<DD>/
+      elsif line =~ %r{^<DD>}
         @bookmarks.last.description = line[4..-1].chomp
       end
     end
@@ -109,7 +108,7 @@ module Bookmarks
     #
     # Returns String h3 content or empty string.
     def h3_tags line
-      md = /<H3.*?>(.*?)<\/H3>/.match(line)
+      md = %r{<H3.*?>(.*?)</H3>}.match(line)
       md ? md[1] : ""
     end
 
@@ -130,5 +129,4 @@ CODE
 LAST_PART = "</DL><p>\n"
 
   end
-
 end

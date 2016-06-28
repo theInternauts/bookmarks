@@ -1,12 +1,10 @@
 # -*- encoding: utf-8 -*-
 
 module Bookmarks
-
   # Public: A single bookmark in Delicious format.
   #
   # REVIEW Should we extract some of the class methods?
   class DeliciousBookmark
-
     # Public: Init a new DeliciousBookmark.
     #
     # url           - An optional String url.
@@ -120,6 +118,5 @@ module Bookmarks
       # Substitute each '-' by a space.
       title = title.gsub("-", " ")
     end
-
   end
 end
