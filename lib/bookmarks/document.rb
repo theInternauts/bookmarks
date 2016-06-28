@@ -1,4 +1,4 @@
-    # Examples
+# Examples
 # -*- encoding: utf-8 -*-
 
 module Bookmarks
@@ -86,11 +86,11 @@ module Bookmarks
         @h3_tags.pop
       elsif line =~ /<DT><A HREF="http/
         new_bookmark = case @bookmarks_format
-          when :delicious
-            DeliciousBookmark.from_string(line)  
-          else          
-            NetscapeBookmark.from_string(line)  
-          end
+                       when :delicious
+                         DeliciousBookmark.from_string(line)
+                       else
+                         NetscapeBookmark.from_string(line)
+                       end
         unless new_bookmark.nil?
           unless @h3_tags.empty?
             new_bookmark.add_tags @h3_tags

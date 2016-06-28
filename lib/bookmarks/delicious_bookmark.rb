@@ -15,7 +15,7 @@ module Bookmarks
     # tags          - An optional String tags. Tags are comma separated.
     # description   - An optional String description.
     # private_flag  - An optional Boolean Integer: 0 = public; 1 = private
-    def initialize url: "", title: "", date: nil, tags: "", description: "", private_flag: 0
+    def initialize(url: "", title: "", date: nil, tags: "", description: "", private_flag: 0)
       @url = url
       @title = title
       @date = date
@@ -29,11 +29,11 @@ module Bookmarks
     # list - An Array of String tags.
     #
     # Returns nothing.
-    def add_tags list
+    def add_tags(list)
       unless @tags.empty?
-        @tags += ','
+        @tags += ","
       end
-      @tags += list.join(',')
+      @tags += list.join(",")
     end
 
     # Public: Set/get the String url.
@@ -58,10 +58,10 @@ module Bookmarks
     # Public: Returns the bookmark as a String.
     def to_s
       str = "<DT><A HREF=\"#{@url}\" " +
-        "ADD_DATE=\"#{@date.nil? ? "" : @date.to_time.to_i}\" " +
-        "PRIVATE=\"#{@private_flag}\" " +
-        "TAGS=\"#{@tags}\">" +
-        (@title.empty? ? 'None' : @title) + "</A>"
+            "ADD_DATE=\"#{@date.nil? ? "" : @date.to_time.to_i}\" " +
+            "PRIVATE=\"#{@private_flag}\" " +
+            "TAGS=\"#{@tags}\">" +
+            (@title.empty? ? "None" : @title) + "</A>"
       if @description.empty?
         str
       else
@@ -75,13 +75,13 @@ module Bookmarks
     # line - String line from a bookmarks file.
     #
     # Returns a new DeliciousBookmark object.
-    def self.from_string line
-      url = /HREF="(.*?)"/.match(line)[1]
-      title = /HREF=.*>(.*)<\/A>$/.match(line)[1]
-      private_flag = /PRIVATE="(.*?)"/.match(line)[1]
-      date = /ADD_DATE="(.*?)"/.match(line)[1]
+    def self.from_string(line)
+      url = %r{HREF="(.*?)"}.match(line)[1]
+      title = %r{HREF=.*>(.*)<\/A>$}.match(line)[1]
+      private_flag = %r{PRIVATE="(.*?)"}.match(line)[1]
+      date = %r{ADD_DATE="(.*?)"}.match(line)[1]
       date = Time.at(date.to_i).to_s
-      tags = self.extract_tags(line)
+      tags = extract_tags(line)
       title = prettify_title title, url
       new url: url, title: title, date: date, tags: tags, private_flag: private_flag
     end
@@ -91,8 +91,8 @@ module Bookmarks
     # line - String line from a bookmarks file.
     #
     # Returns a String with tags or an empty string.
-    def self.extract_tags line
-      md = /TAGS="(.*?)"/.match(line)
+    def self.extract_tags(line)
+      md = %r{TAGS="(.*?)"}.match(line)
       md ? md[1] : ""
     end
 
@@ -110,15 +110,15 @@ module Bookmarks
     #   @title # => 'flat design colors'
     #
     # Returns String prettified title.
-    def self.prettify_title title, url
-      return title unless title == '' || title == 'None'
+    def self.prettify_title(title, url)
+      return title unless title == "" || title == "None"
       title = url
       # Remove '/' at the end if it exists.
-      title = title.gsub(/\/$/, '')
+      title = title.gsub(%r{/$}, "")
       # Keep the last element of the url.
-      title = title.match(/^.*\/(.*)/)[1]
+      title = title.match(%r{^.*/(.*)})[1]
       # Substitute each '-' by a space.
-      title = title.gsub('-', ' ')
+      title = title.gsub("-", " ")
     end
 
   end
